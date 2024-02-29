@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
                           style: bigTextStyle,
                         ),
                         const SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         Text(
                           formattedMonthYear,
