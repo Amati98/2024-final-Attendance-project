@@ -129,27 +129,27 @@ class _StaffLoginState extends State<StaffLogin> {
                 height: 10,
               ),
               // new user? sign up
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "New User?",
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        color: Colors.blue[200],
-                        fontSize: 20,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     const Text(
+              //       "New User?",
+              //       style: TextStyle(
+              //         fontSize: 20,
+              //       ),
+              //     ),
+              //     TextButton(
+              //       onPressed: () {},
+              //       child: Text(
+              //         "Sign Up",
+              //         style: TextStyle(
+              //           color: Colors.blue[200],
+              //           fontSize: 20,
+              //         ),
+              //       ),
+              //     )
+              //   ],
+              // ),
             ],
           ),
         ),

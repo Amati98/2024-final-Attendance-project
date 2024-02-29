@@ -1,5 +1,5 @@
 import 'package:final_year/screens/password_changed.dart';
-import 'package:final_year/screens/student_login.dart';
+import 'package:final_year/screens/staff_main_login.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword3 extends StatelessWidget {
@@ -126,7 +126,7 @@ class ForgotPassword3 extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const StudentLogin()),
+                        builder: (context) => const StaffMainLogin()),
                   );
                 },
                 child: Text(

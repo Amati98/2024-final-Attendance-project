@@ -1,15 +1,14 @@
 import 'package:final_year/screens/forgot_pass1.dart';
-import 'package:final_year/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 
-class StudentLogin extends StatefulWidget {
-  const StudentLogin({super.key});
+class StaffMainLogin extends StatefulWidget {
+  const StaffMainLogin({super.key});
 
   @override
-  State<StudentLogin> createState() => _StudentLoginState();
+  State<StaffMainLogin> createState() => _StaffMainLoginState();
 }
 
-class _StudentLoginState extends State<StudentLogin> {
+class _StaffMainLoginState extends State<StaffMainLogin> {
   final idController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -35,7 +34,7 @@ class _StudentLoginState extends State<StudentLogin> {
                   height: 15,
                 ),
                 const Text(
-                  "Student's Portal",
+                  "Staff Portal",
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
@@ -58,7 +57,7 @@ class _StudentLoginState extends State<StudentLogin> {
                     controller: idController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Student IDDD",
+                      hintText: "Staff ID",
                       prefixIcon: Icon(Icons.person),
                     ),
                   ),
@@ -146,33 +145,33 @@ class _StudentLoginState extends State<StudentLogin> {
                   height: 20,
                 ),
                 // new user? sign up
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "New User?",
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignUp()),
-                        );
-                      },
-                      child: Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          color: Colors.blue[200],
-                          fontSize: 20,
-                        ),
-                      ),
-                    )
-                  ],
-                )
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     const Text(
+                //       "New User?",
+                //       style: TextStyle(
+                //         fontSize: 20,
+                //       ),
+                //     ),
+                //     TextButton(
+                //       onPressed: () {
+                //         Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (context) => const SignUp()),
+                //         );
+                //       },
+                //       child: Text(
+                //         "Sign Up",
+                //         style: TextStyle(
+                //           color: Colors.blue[200],
+                //           fontSize: 20,
+                //         ),
+                //       ),
+                //     )
+                //   ],
+                // )
               ],
             ),
           ),

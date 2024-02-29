@@ -1,4 +1,4 @@
-import 'package:final_year/screens/student_login.dart';
+import 'package:final_year/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +14,7 @@ class Homepage extends StatelessWidget {
     // dont forget to write "GetMaterialApp" for the home screen to run
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StudentLogin(),
+      home: DashboardScreen(),
     );
   }
 }

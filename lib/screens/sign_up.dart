@@ -1,4 +1,4 @@
-import 'package:final_year/screens/student_login.dart';
+import 'package:final_year/screens/staff_main_login.dart';
 import 'package:final_year/widgets/input_fields.dart';
 import 'package:final_year/widgets/loginButton.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +99,7 @@ class _SignUpState extends State<SignUp> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const StudentLogin()),
+                              builder: (context) => const StaffMainLogin()),
                         );
                       },
                       child: Text(
