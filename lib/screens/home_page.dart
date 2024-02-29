@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                           style: bigTextStyle,
                         ),
                         const SizedBox(
-                          height: 30,
+                          height: 20,
                         ),
                         Text(formattedTime.split(' ')[1], // Display am or pm
                             style: smallTextStyle),
