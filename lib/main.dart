@@ -30,12 +30,3 @@ class Homepage extends StatelessWidget {
     );
   }
 }
-
-// DevicePreview(
-//       enabled: true,
-//       tools: [
-//         ...DevicePreview.defaultTools,
-//         const CustomPlugin(),
-//       ],
-//       builder: (context) => const BasicApp(),
-//     ),
