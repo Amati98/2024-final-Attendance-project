@@ -24,7 +24,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
       currentIndex = index;
     });
   }
-
+// CustomScrollView(
+//       slivers: [
+//         SliverAppBar(
+//           title: Padding(
+//             padding: const EdgeInsets.only(left: 24),
+//             child: Text(
+//               'Track Parcel',
+//               style: Theme.of(context).textTheme.headline1,
+//             ),
+//           ),
+//           centerTitle: false,
+//           floating: true,
+//           snap: false,
+//           pinned: true,
+//           titleSpacing: 0.0,
+//           actions: [
+//             Padding(
+//               padding: const EdgeInsets.only(right: 24),
+//               child: CircleAvatar(
+//                 child: ClipOval(
+//                   child: Image.network(ImageUtils.icProfile),
+//                 ),
+//               ),
+//             ),
+//           ],
+//           shadowColor: Colors.transparent,
+//           expandedHeight: 316,
+//           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+//           shape: const RoundedRectangleBorder(
+//             borderRadius: BorderRadius.only(
+//               bottomRight: Radius.circular(16),
+//               bottomLeft: Radius.circular(16),
+//             ),
+//           ),
   @override
   Widget build(BuildContext context) {
     return Scaffold(
