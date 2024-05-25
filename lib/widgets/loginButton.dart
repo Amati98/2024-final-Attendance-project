@@ -12,7 +12,7 @@ class LoginButton extends StatelessWidget {
   final String buttonText;
   final Color buttonColor;
   final Color textColor;
-  final Function onPressed;
+   final void Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +24,7 @@ class LoginButton extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: buttonColor,
               ), // background
-              onPressed: () {},
+              onPressed: onPressed,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
