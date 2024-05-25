@@ -1,6 +1,10 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:final_year/screens/dashboard_screen.dart';
+import 'package:final_year/screens/staff_login.dart';
+import 'package:final_year/service/provider.dart';
+import 'package:final_year/utils/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 // void main() {
@@ -8,25 +12,30 @@ import 'package:get/get.dart';
 // }
 void main() {
   runApp(
-    DevicePreview(
-      enabled: true,
-      tools: const [
-        ...DevicePreview.defaultTools,
-      ],
-      builder: (context) => const Homepage(),
+    ProviderScope(
+      child: DevicePreview(
+        enabled: true,
+        tools: const [
+          ...DevicePreview.defaultTools,
+        ],
+        builder: (context) => const Homepage(),
+      ),
     ),
   );
 }
 
-class Homepage extends StatelessWidget {
+class Homepage extends ConsumerWidget {
   const Homepage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    //  final responseProvider = ref.watch(  ApiService().loginProvider);
+    
     // dont forget to write "GetMaterialApp" for the home screen to run
-    return const GetMaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DashboardScreen(),
+      // home: StaffLogin(),
+      routes: getAppRoutes()
     );
   }
 }
