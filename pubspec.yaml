@@ -38,13 +38,28 @@ dependencies:
   get: ^4.6.6
   intl: ^0.18.1
   device_preview: ^1.1.0
+ login-int
   http: ^1.1.0
   flutter_riverpod: ^2.4.10
 
+  # flutter_native_splash: ^2.3.7
+ main
+
 dev_dependencies:
+  flutter_native_splash: ^1.2.0
   flutter_test:
     sdk: flutter
 
+flutter_native_splash:
+  
+  android: true
+  ios: true
+  web: false
+
+  image: assets/logo.png
+  color: "#000000"
+  # ios:
+  #   image: assets/logo.png
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
