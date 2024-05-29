@@ -1,4 +1,4 @@
-import 'package:final_year/service/provider.dart';
+import 'package:final_year/service/providers/provider.dart';
 import 'package:final_year/widgets/loginButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +34,6 @@ class _StaffLoginState extends ConsumerState<StaffLogin> {
       final user = await ref.read(loginProvider(credentials).future);
       // Save the user data
       ref.read(userProvider.notifier).setUser(user);
-      print({user.address: "address"});
 
       // Handle successful login (e.g., navigate to another page or update UI)
       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,11 +1,7 @@
 import 'package:device_preview/device_preview.dart';
-import 'package:final_year/screens/dashboard_screen.dart';
-import 'package:final_year/screens/staff_login.dart';
-import 'package:final_year/service/provider.dart';
 import 'package:final_year/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
 // void main() {
 //   runApp(const Homepage());

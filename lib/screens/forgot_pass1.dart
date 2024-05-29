@@ -1,3 +1,4 @@
+import 'package:final_year/screens/dashboard_screen.dart';
 import 'package:final_year/screens/forgot_pass2.dart';
 import 'package:final_year/screens/staff_main_login.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ class ForgotPassword1 extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ForgotPassword2()),
+                          builder: (context) => const DashboardScreen()),
                     );
                   },
                   child: const Text(

@@ -1,162 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:final_year/service/providers/provider.dart';
 
-class AttendancePage extends StatelessWidget {
-  const AttendancePage({super.key});
+class AttendancePage extends ConsumerWidget {
+  final int id;
+
+  const AttendancePage({Key? key, required this.id}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.all(12.0),
-          padding: const EdgeInsets.fromLTRB(15, 28, 15, 28),
-          decoration: BoxDecoration(
-            color: const Color(0xffFFD9A7),
-            borderRadius: BorderRadius.circular(10),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final attendanceHistoriesAsyncValue =
+        ref.watch(attendanceHistoriesProvider(id));
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.green.shade900,
+          title: const Text(
+            'Attendance',
+            style: TextStyle(color: Colors.white),
           ),
-          child: const SingleChildScrollView(
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
+        body: attendanceHistoriesAsyncValue.when(
+          data: (attendanceHistories) => Container(
+            width: double.infinity,
+            margin: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.green.shade100,
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Attendance',
-                    style: TextStyle(
-                      color: Color(0xffBD9055),
-                      fontSize: 20,
-                    ),
+                const Text(
+                  'Attendance Details',
+                  style: TextStyle(
+                    fontSize: 20,
                   ),
                 ),
-                SizedBox(
-                  height: 25,
+                const SizedBox(
+                  height: 15,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    //column1
-                    Column(
-                      children: [
-                        Text(
-                          '7',
-                          style: TextStyle(
-                              fontSize: 15, color: Color(0xff54B84B)),
-                        ),
-                        Text('Presents',
-                            style: TextStyle(
-                                fontSize: 18, color: Color(0xffBD9055)))
-                      ],
-                    ),
-
-                    //column2
-                    Column(
-                      children: [
-                        Text(
-                          '7',
-                          style: TextStyle(
-                              fontSize: 15, color: Color(0xffC2B260)),
-                        ),
-                        Text('Late',
-                            style: TextStyle(
-                                fontSize: 18, color: Color(0xffBD9055)))
-                      ],
-                    ),
-
-                    //column3
-                    Column(
-                      children: [
-                        Text(
-                          '7',
-                          style: TextStyle(
-                              fontSize: 15, color: Color(0xffE03F3F)),
-                        ),
-                        Text('Absent',
-                            style: TextStyle(
-                                fontSize: 18, color: Color(0xffBD9055)))
-                      ],
-                    )
-                  ],
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: attendanceHistories.length,
+                    itemBuilder: (context, index) {
+                      final attendance = attendanceHistories[index];
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.green,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text('${attendance.date.toLocal()}'),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Text('${attendance.timeIn.toLocal()}'),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Text('${attendance.timeOut.toLocal()}'),
+                            ],
+                          ),
+                          const Divider(),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
           ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('Error: $error')),
         ),
-        const SizedBox(height: 20,),
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.all(12.0),
-            padding: const EdgeInsets.fromLTRB(15, 28, 15, 28),
-            decoration: BoxDecoration(
-              color: const Color(0xff54B84B),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const SingleChildScrollView(
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Attendance',
-                      style: TextStyle(
-                        color: Color(0xffBD9055),
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      //column1
-                      Column(
-                        children: [
-                          Text(
-                            '7',
-                            style: TextStyle(
-                                fontSize: 15, color: Color(0xff54B84B)),
-                          ),
-                          Text('Presents',
-                              style: TextStyle(
-                                  fontSize: 18, color: Color(0xffBD9055)))
-                        ],
-                      ),
-
-                      //column2
-                      Column(
-                        children: [
-                          Text(
-                            '7',
-                            style: TextStyle(
-                                fontSize: 15, color: Color(0xffC2B260)),
-                          ),
-                          Text('Late',
-                              style: TextStyle(
-                                  fontSize: 18, color: Color(0xffBD9055)))
-                        ],
-                      ),
-
-                      //column3
-                      Column(
-                        children: [
-                          Text(
-                            '7',
-                            style: TextStyle(
-                                fontSize: 15, color: Color(0xffE03F3F)),
-                          ),
-                          Text('Absent',
-                              style: TextStyle(
-                                  fontSize: 18, color: Color(0xffBD9055)))
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
