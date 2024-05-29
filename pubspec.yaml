@@ -40,6 +40,11 @@ dependencies:
   device_preview: ^1.1.0
   http: ^1.1.0
   flutter_riverpod: ^2.4.10
+  google_maps_flutter: ^2.5.3
+  internet_connection_checker: ^1.0.0+1
+  flutter_html: ^2.2.1
+  geolocator: ^11.1.0
+  webview_flutter: ^2.8.0
 
   # flutter_native_splash: ^2.3.7
 
