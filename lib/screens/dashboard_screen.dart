@@ -1,5 +1,6 @@
 import 'package:final_year/screens/attendance_page.dart';
 import 'package:final_year/screens/home_page.dart';
+import 'package:final_year/screens/map_screen.dart';
 import 'package:final_year/screens/notification_page.dart';
 import 'package:final_year/screens/profile_page.dart';
 import 'package:final_year/service/providers/provider.dart';
@@ -75,7 +76,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     List<Widget> pages = [
       const HomePage(),
       AttendancePage(id: user.id),
-      const NotificationPage(),
+      const MapPage(),
       const ProfilePage(),
     ];
     return Scaffold(
@@ -124,7 +125,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home)),
           BottomNavigationBarItem(label: "Attendance", icon: Icon(Icons.list)),
           BottomNavigationBarItem(
-              label: "Notification", icon: Icon(Icons.notifications)),
+              label: "Location", icon: Icon(Icons.location_on)),
           BottomNavigationBarItem(label: "Profile", icon: Icon(Icons.person)),
         ],
       ),
