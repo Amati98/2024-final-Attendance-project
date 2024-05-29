@@ -1,4 +1,4 @@
-import 'package:final_year/service/provider.dart';
+import 'package:final_year/service/providers/provider.dart';
 import 'package:final_year/widgets/loginButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:final_year/service/models.dart';
+import 'package:final_year/service/models/attendance_models.dart';
+import 'package:final_year/service/models/user_models.dart';
 import 'package:final_year/utils/app_urls.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -49,6 +50,35 @@ class ApiService {
       throw Exception('Error during login: $e');
     }
   }
+
+  Future<List<Attendance>> fetchAttendanceHistories(int id) async {
+    final response = await http.get(
+      Uri.parse('${AppUrls.baseUrl}/api/AttendanceHistories/$id'),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList.map((json) => Attendance.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load attendance histories');
+    }
+  }
+
+  // New function for posting attendance
+  Future<void> postAttendanceHistory(Map<String, dynamic> payload) async {
+    final response = await http.post(
+      Uri.parse("${AppUrls.baseUrl}/api/AttendanceHistories"),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(payload),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to post attendance history');
+    }
+  }
 }
 
 // Define a StateNotifier for the user state
@@ -76,4 +106,11 @@ final loginProvider =
   ref.read(userProvider.notifier).setUser(user);
 
   return user;
+});
+
+//define provider for attendance
+final attendanceHistoriesProvider =
+    FutureProvider.family<List<Attendance>, int>((ref, id) async {
+  final apiService = ref.watch(apiServiceProvider);
+  return apiService.fetchAttendanceHistories(id);
 });

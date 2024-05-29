@@ -2,22 +2,24 @@ import 'package:final_year/screens/attendance_page.dart';
 import 'package:final_year/screens/home_page.dart';
 import 'package:final_year/screens/notification_page.dart';
 import 'package:final_year/screens/profile_page.dart';
+import 'package:final_year/service/providers/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
-  List pages = [
-    const HomePage(),
-    const AttendancePage(),
-    const NotificationPage(),
-    const ProfilePage()
-  ];
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  // List pages = [
+  //   const HomePage(),
+  //   const AttendancePage(id: id,),
+  //   const NotificationPage(),
+  //   const ProfilePage()
+  // ];
   int currentIndex = 0;
   void onTap(int index) {
     setState(() {
@@ -60,6 +62,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
 //           ),
   @override
   Widget build(BuildContext context) {
+    // Get the user ID from the provider
+    final user = ref.watch(userProvider);
+
+    // Check if the user is null
+    if (user == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    List<Widget> pages = [
+      const HomePage(),
+      AttendancePage(id: user.id),
+      const NotificationPage(),
+      const ProfilePage(),
+    ];
     return Scaffold(
       backgroundColor: const Color(0xFFE0E0E0),
       appBar: AppBar(
