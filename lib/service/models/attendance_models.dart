@@ -6,7 +6,7 @@ class Attendance {
   final DateTime date;
   final DateTime timeIn;
   final DateTime timeOut;
-  final Staff staff;
+  final Staff? staff;
 
   Attendance({
     required this.id,
@@ -14,7 +14,7 @@ class Attendance {
     required this.date,
     required this.timeIn,
     required this.timeOut,
-    required this.staff,
+    this.staff,
   });
 
   factory Attendance.fromJson(Map<String, dynamic> json) {
@@ -24,7 +24,7 @@ class Attendance {
       date: DateTime.parse(json['date']),
       timeIn: DateTime.parse(json['timeIn']),
       timeOut: DateTime.parse(json['timeOut']),
-      staff: Staff.fromJson(json['staff']),
+      staff: json['staff'] != null ? Staff.fromJson(json['staff']) : null,
     );
   }
 }
