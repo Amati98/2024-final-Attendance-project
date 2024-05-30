@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:final_year/service/providers/provider.dart';
+import 'package:intl/intl.dart';
 
 class AttendancePage extends ConsumerWidget {
   final int id;
 
   const AttendancePage({Key? key, required this.id}) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final attendanceHistoriesAsyncValue =
-        ref.watch(attendanceHistoriesProvider(id));
+    final attendanceHistoriesAsyncValue = ref.watch(attendanceHistoriesProvider(id));
+     // Format the date and time
+    final dateFormat = DateFormat('EEE d');
+    final timeFormat = DateFormat('h:mma');
+    print({attendanceHistoriesAsyncValue: "attendance"});
 
     return SafeArea(
       child: Scaffold(
@@ -48,28 +53,42 @@ class AttendancePage extends ConsumerWidget {
                     itemCount: attendanceHistories.length,
                     itemBuilder: (context, index) {
                       final attendance = attendanceHistories[index];
+                      final formattedDate = dateFormat.format(attendance.date);
+                      final formattedTimeIn = timeFormat.format(attendance.timeIn);
+                      final formattedTimeOut = timeFormat.format(attendance.timeOut);
                       return Column(
                         children: [
                           Row(
                             children: [
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.green,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text('${attendance.date.toLocal()}'),
-                                  ],
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.green,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('${formattedDate.toString()}'),
+                                    ],
+                                  ),
                                 ),
                               ),
                               const SizedBox(
                                 width: 20,
                               ),
-                              Text('${attendance.timeIn.toLocal()}'),
+                              Expanded(
+                                flex: 1,
+                                child: Text('${formattedTimeIn.toString()}'),
+                              ),
                               const SizedBox(
                                 width: 20,
                               ),
-                              Text('${attendance.timeOut.toLocal()}'),
+                              Expanded(
+                                flex: 1,
+                                child: Text('${formattedTimeOut.toString()}'),
+                              ),
                             ],
                           ),
                           const Divider(),

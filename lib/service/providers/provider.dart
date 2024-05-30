@@ -56,10 +56,12 @@ class ApiService {
       Uri.parse('${AppUrls.baseUrl}/api/AttendanceHistories/$id'),
       headers: {'Content-Type': 'application/json'},
     );
-
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((json) => Attendance.fromJson(json)).toList();
+      // Parse the response body as a single JSON object
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      // Convert the single JSON object to an Attendance object and wrap it in a list
+      return [Attendance.fromJson(jsonResponse)];
     } else {
       throw Exception('Failed to load attendance histories');
     }
