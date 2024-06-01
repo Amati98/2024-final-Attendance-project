@@ -39,7 +39,7 @@ class _StaffLoginState extends ConsumerState<StaffLogin> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login Successful')),
       );
-        Navigator.pushNamed(context, "/forgetPasword");
+        Navigator.pushNamed(context, "/dashboard");
     } catch (error) {
       // Handle error during login
       setState(() {

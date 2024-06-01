@@ -27,4 +27,13 @@ class Attendance {
       staff: json['staff'] != null ? Staff.fromJson(json['staff']) : null,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'staffId': staffId,
+      'date': date.toIso8601String(),
+      'timeIn': timeIn.toIso8601String(),
+      'timeOut': timeOut.toIso8601String(),
+    };
+  }
 }
