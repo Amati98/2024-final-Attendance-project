@@ -68,17 +68,25 @@ class ApiService {
   }
 
   // New function for posting attendance
-  Future<void> postAttendanceHistory(Map<String, dynamic> payload) async {
+  Future<Attendance> postAttendanceHistory(
+      int staffId, String date, String timeIn, String timeOut) async {
     final response = await http.post(
       Uri.parse("${AppUrls.baseUrl}/api/AttendanceHistories"),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: jsonEncode(payload),
+      body: jsonEncode({
+        'staffId': staffId,
+        'date': date,
+        'timeIn': timeIn,
+        'timeOut': timeOut,
+      }),
     );
 
-    if (response.statusCode != 201) {
-      throw Exception('Failed to post attendance history');
+    if (response.statusCode == 201) {
+      return Attendance.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to post attendance');
     }
   }
 }
@@ -92,9 +100,23 @@ class UserNotifier extends StateNotifier<User?> {
   }
 }
 
+class AttendanceNotifier extends StateNotifier<Attendance?> {
+  AttendanceNotifier() : super(null);
+
+  void setAttendance(Attendance attendance) {
+    state = attendance;
+  }
+}
+
 // Define a StateNotifierProvider for the user state
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   return UserNotifier();
+});
+
+// Define a StateNotifierProvider for the user state
+final attendanceProvider =
+    StateNotifierProvider<AttendanceNotifier, Attendance?>((ref) {
+  return AttendanceNotifier();
 });
 
 // Define a FutureProvider for login
@@ -115,4 +137,22 @@ final attendanceHistoriesProvider =
     FutureProvider.family<List<Attendance>, int>((ref, id) async {
   final apiService = ref.watch(apiServiceProvider);
   return apiService.fetchAttendanceHistories(id);
+});
+
+// Define a FutureProvider for post attendance
+final attendancePostProvider =
+    FutureProvider.family<Attendance, Map<String, String>>(
+        (ref, postData) async {
+  final apiService = ref.watch(apiServiceProvider);
+  final attendance = await apiService.postAttendanceHistory(
+    int.parse(postData['staffId']!), // Convert staffId to integer
+    postData['date']!,
+    postData['timeIn']!,
+    postData['timeOut']!,
+  );
+
+  // Access the provider reference and call setAttendance
+  ref.read(attendanceProvider.notifier).setAttendance(attendance);
+
+  return attendance;
 });

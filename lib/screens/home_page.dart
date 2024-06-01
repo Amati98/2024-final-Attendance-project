@@ -1,17 +1,23 @@
 import 'package:final_year/constants.dart';
+import 'package:final_year/service/providers/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends ConsumerStatefulWidget {
+  final int id;
+  const HomePage({Key? key, required this.id}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   bool onCheckingInOut = false;
   DateTime now = DateTime.now();
+  bool isCheckedIn = false;
+  bool isCheckOutEnabled = false;
+  bool areButtonsDisabled = false;
 
   // Format time in 12-hour format
   late String formattedTime;
@@ -40,6 +46,8 @@ class _HomePageState extends State<HomePage> {
 
   void handleCheckIn() {
     setState(() {
+      isCheckedIn = true;
+      isCheckOutEnabled = true;
       now = DateTime.now();
       checkInController.text = DateFormat('h:mm a').format(now);
     });
@@ -47,9 +55,40 @@ class _HomePageState extends State<HomePage> {
 
   void handleCheckOut() {
     setState(() {
+      isCheckedIn = false;
+      isCheckOutEnabled = false;
       now = DateTime.now();
       checkOutController.text = DateFormat('h:mm a').format(now);
+      areButtonsDisabled = true; // Disable both buttons after checkout
     });
+    // Post attendance after check out
+    postAttendance();
+  }
+
+  Future<void> postAttendance() async {
+    final formattedDateTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(now);
+   // Convert text back to DateTime
+  final DateTime checkInTime = DateFormat('h:mm a').parse(checkInController.text);
+  final DateTime checkOutTime = DateFormat('h:mm a').parse(checkOutController.text);
+
+  // Format check-in and check-out times correctly
+  final formattedCheckInTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(checkInTime);
+  final formattedCheckOutTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(checkOutTime);
+    final postData = {
+      'staffId': widget.id.toString(),
+      'date': formattedDateTime.toString(),
+      'timeIn': formattedCheckInTime,
+      'timeOut': formattedCheckOutTime,
+    };
+    try {
+      await ref.read(attendancePostProvider(postData).future);
+       // Handle successful login (e.g., navigate to another page or update UI)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Checked In and Out Successful')),
+      );
+    } catch (e) {
+      // Handle the error if needed
+    }
   }
 
   @override
@@ -138,7 +177,9 @@ class _HomePageState extends State<HomePage> {
                       primary:
                           Color.fromARGB(255, 33, 156, 55), // Background color
                     ),
-                    onPressed: handleCheckIn,
+                    onPressed: (isCheckedIn || areButtonsDisabled)
+                        ? null
+                        : handleCheckIn,
                     child: Text('CheckIn'),
                   ),
                 ),
@@ -148,7 +189,9 @@ class _HomePageState extends State<HomePage> {
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xffBD9055), // Background color
                     ),
-                    onPressed: handleCheckOut,
+                    onPressed: (isCheckOutEnabled && !areButtonsDisabled)
+                        ? handleCheckOut
+                        : null,
                     child: Text('CheckOut'),
                   ),
                 ),
