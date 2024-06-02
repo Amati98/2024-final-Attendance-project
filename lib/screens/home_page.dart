@@ -1,4 +1,6 @@
 import 'package:final_year/constants.dart';
+import 'package:final_year/service/models/attendance_models.dart';
+import 'package:final_year/service/providers/attendance.dart';
 import 'package:final_year/service/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -82,6 +84,16 @@ class _HomePageState extends ConsumerState<HomePage> {
     };
     try {
       await ref.read(attendancePostProvider(postData).future);
+      // Add the new attendance to the list
+      final newAttendance = Attendance(
+        id: 0, // Ensure this is the correct id
+        staffId: widget.id,
+        date: DateTime.parse(postData['date']!),
+        timeIn: DateTime.parse(postData['timeIn']!),
+        timeOut: DateTime.parse(postData['timeOut']!),
+        staff: null, // Replace with actual staff data if any
+      );
+      ref.read(attendanceNotifierProvider.notifier).addAttendance(newAttendance);
        // Handle successful login (e.g., navigate to another page or update UI)
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Checked In and Out Successful')),
