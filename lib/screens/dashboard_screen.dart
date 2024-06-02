@@ -27,6 +27,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       currentIndex = index;
     });
   }
+
 // CustomScrollView(
 //       slivers: [
 //         SliverAppBar(
@@ -65,6 +66,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget build(BuildContext context) {
     // Get the user ID from the provider
     final user = ref.watch(userProvider);
+    // final attendance = ref.watch(attendanceProvider);
 
     // Check if the user is null
     if (user == null) {

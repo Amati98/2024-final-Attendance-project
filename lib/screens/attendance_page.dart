@@ -1,3 +1,4 @@
+import 'package:final_year/service/providers/attendance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:final_year/service/providers/provider.dart';
@@ -11,11 +12,11 @@ class AttendancePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final attendanceHistoriesAsyncValue = ref.watch(attendanceHistoriesProvider(id));
+    final attendanceHistories = ref.watch(attendanceNotifierProvider);
      // Format the date and time
     final dateFormat = DateFormat('EEE d');
     final timeFormat = DateFormat('h:mma');
-    print({attendanceHistoriesAsyncValue: "attendance"});
+    final filteredAttendances = attendanceHistories.where((attendance) => attendance.staffId == id).toList();
 
     return SafeArea(
       child: Scaffold(
@@ -28,8 +29,7 @@ class AttendancePage extends ConsumerWidget {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
-        body: attendanceHistoriesAsyncValue.when(
-          data: (attendanceHistories) => Container(
+        body: Container(
             width: double.infinity,
             margin: const EdgeInsets.all(12.0),
             padding: const EdgeInsets.all(20),
@@ -50,9 +50,9 @@ class AttendancePage extends ConsumerWidget {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: attendanceHistories.length,
+                    itemCount: filteredAttendances.length,
                     itemBuilder: (context, index) {
-                      final attendance = attendanceHistories[index];
+                      final attendance = filteredAttendances[index];
                       final formattedDate = dateFormat.format(attendance.date);
                       final formattedTimeIn = timeFormat.format(attendance.timeIn);
                       final formattedTimeOut = timeFormat.format(attendance.timeOut);
@@ -100,10 +100,10 @@ class AttendancePage extends ConsumerWidget {
               ],
             ),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Error: $error')),
+          // loading: () => CircularProgressIndicator(),
+          // error: (error, stack) => Center(child: Text('Error: $error')),
         ),
-      ),
+      // ),
     );
   }
 }

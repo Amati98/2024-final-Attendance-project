@@ -51,17 +51,19 @@ class ApiService {
     }
   }
 
-  Future<List<Attendance>> fetchAttendanceHistories(int id) async {
+  Future<List<Attendance>> fetchAttendanceHistories() async {
     final response = await http.get(
-      Uri.parse('${AppUrls.baseUrl}/api/AttendanceHistories/$id'),
+      Uri.parse('${AppUrls.baseUrl}/api/AttendanceHistories'),
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      // Parse the response body as a single JSON object
-      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      // Parse the response body as a list of JSON objects
+      final List<dynamic> jsonResponse = jsonDecode(response.body);
 
-      // Convert the single JSON object to an Attendance object and wrap it in a list
-      return [Attendance.fromJson(jsonResponse)];
+      // Convert the list of JSON objects to a list of Attendance objects
+      return jsonResponse.map((json) => Attendance.fromJson(json)).toList();
+      // Filter the list based on staff ID
+    // return allAttendances.where((attendance) => attendance.staffId == id).toList();
     } else {
       throw Exception('Failed to load attendance histories');
     }
@@ -132,12 +134,12 @@ final loginProvider =
   return user;
 });
 
-//define provider for attendance
-final attendanceHistoriesProvider =
-    FutureProvider.family<List<Attendance>, int>((ref, id) async {
-  final apiService = ref.watch(apiServiceProvider);
-  return apiService.fetchAttendanceHistories(id);
-});
+// //define provider for attendance
+// final attendanceHistoriesProvider =
+//     FutureProvider.family<List<Attendance>, int>((ref, id) async {
+//   final apiService = ref.watch(apiServiceProvider);
+//   return apiService.fetchAttendanceHistories(id);
+// });
 
 // Define a FutureProvider for post attendance
 final attendancePostProvider =
