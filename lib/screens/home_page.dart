@@ -69,13 +69,17 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> postAttendance() async {
     final formattedDateTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(now);
-   // Convert text back to DateTime
-  final DateTime checkInTime = DateFormat('h:mm a').parse(checkInController.text);
-  final DateTime checkOutTime = DateFormat('h:mm a').parse(checkOutController.text);
+    // Convert text back to DateTime
+    final DateTime checkInTime =
+        DateFormat('h:mm a').parse(checkInController.text);
+    final DateTime checkOutTime =
+        DateFormat('h:mm a').parse(checkOutController.text);
 
-  // Format check-in and check-out times correctly
-  final formattedCheckInTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(checkInTime);
-  final formattedCheckOutTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(checkOutTime);
+    // Format check-in and check-out times correctly
+    final formattedCheckInTime =
+        DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(checkInTime);
+    final formattedCheckOutTime =
+        DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(checkOutTime);
     final postData = {
       'staffId': widget.id.toString(),
       'date': formattedDateTime.toString(),
@@ -83,18 +87,9 @@ class _HomePageState extends ConsumerState<HomePage> {
       'timeOut': formattedCheckOutTime,
     };
     try {
-      await ref.read(attendancePostProvider(postData).future);
-      // Add the new attendance to the list
-      final newAttendance = Attendance(
-        id: 0, // Ensure this is the correct id
-        staffId: widget.id,
-        date: DateTime.parse(postData['date']!),
-        timeIn: DateTime.parse(postData['timeIn']!),
-        timeOut: DateTime.parse(postData['timeOut']!),
-        staff: null, // Replace with actual staff data if any
-      );
+     final Attendance newAttendance = await ref.read(attendancePostProvider(postData).future);
       ref.read(attendanceNotifierProvider.notifier).addAttendance(newAttendance);
-       // Handle successful login (e.g., navigate to another page or update UI)
+      // Handle successful login (e.g., navigate to another page or update UI)
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Checked In and Out Successful')),
       );
