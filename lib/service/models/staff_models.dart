@@ -11,6 +11,7 @@ class Staff {
   final String password;
   final List<String> attendanceHistories;
 
+
   Staff({
     required this.id,
     required this.fname,
