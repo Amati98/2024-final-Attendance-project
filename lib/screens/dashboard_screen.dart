@@ -85,6 +85,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       backgroundColor: const Color(0xFFE0E0E0),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE0E0E0),
+        automaticallyImplyLeading: false, // This removes the back arrow
       ),
       endDrawer: Drawer(
         child: ListView(

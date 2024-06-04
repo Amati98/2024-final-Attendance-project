@@ -15,6 +15,9 @@ class StaffLogin extends ConsumerStatefulWidget {
 class _StaffLoginState extends ConsumerState<StaffLogin> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+  bool rememberMe = false;
+  bool _passwordInVisible = true;
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -39,7 +42,7 @@ class _StaffLoginState extends ConsumerState<StaffLogin> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login Successful')),
       );
-        Navigator.pushNamed(context, "/dashboard");
+      Navigator.pushNamed(context, "/dashboard");
     } catch (error) {
       // Handle error during login
       setState(() {
@@ -55,111 +58,162 @@ class _StaffLoginState extends ConsumerState<StaffLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade400,
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 50,
-                bottom: 50,
-              ),
-              child: Image.asset(
-                "assets/logo.png",
-                height: 158,
-                width: 154,
-                fit: BoxFit.cover,
-              ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 80,
+              horizontal: 30,
             ),
-            const Padding(
-              padding: EdgeInsets.only(
-                bottom: 40,
-              ),
-              child: Text(
-                "Staff Portal",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 22,
+            child: Center(
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        "assets/logo.png",
+                        height: 158,
+                        width: 154,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: Text(
+                        'Staff Portal',
+                        style: TextStyle(fontSize: 28),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      validator: (usernameController) {
+                        if (usernameController!.isEmpty) {
+                          return 'Username must not be empty';
+                        } else {
+                          return null;
+                        }
+                      },
+                      textCapitalization: TextCapitalization.words,
+                      controller: usernameController,
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        hintText: "Username",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        prefixIcon: Icon(
+                          Icons.person,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    TextFormField(
+                      validator: (passwordController) {
+                        if (passwordController!.isEmpty) {
+                          return 'Password must not be empty';
+                        }
+                      },
+                      controller: passwordController,
+                      obscureText: _passwordInVisible,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        hintText: "Password",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        prefixIcon: Icon(
+                          Icons.lock,
+                        ),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _passwordInVisible =
+                                  !_passwordInVisible; //change boolean value
+                            });
+                          },
+                          icon: Icon(
+                            _passwordInVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                            value: rememberMe,
+                            activeColor: Colors.green,
+                            onChanged: (newRemember) {
+                              setState(() {
+                                rememberMe = newRemember!;
+                              });
+                            }),
+                        Text('Remember me',
+                            style: TextStyle(
+                                color: Colors.grey.shade700, fontSize: 15)),
+                      ],
+                    ),
+                    const SizedBox(height: 40),
+                    LoginButton(
+                      onPressed: _isLoading ? null : _login,
+                      buttonText: 'Login',
+                      buttonColor: const Color(0xFF4FCA8A),
+                      textColor: Colors.black,
+                    ),
+                    const SizedBox(height: 50),
+
+                    // InkWell(
+                    //   onTap: () {
+                    //     print({_formkey.currentState!.validate(), 'Login'});
+                    //     if (_formkey.currentState!.validate()) {
+                    //       _isLoading ? null : _login;
+                    //     }
+                    //   },
+                    //   child: Container(
+                    //     margin: const EdgeInsets.symmetric(horizontal: 20),
+                    //     padding: const EdgeInsets.symmetric(vertical: 15),
+                    //     width: double.infinity,
+                    //     decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(10),
+                    //         color: Colors.green.shade900),
+                    //     child: const Center(
+                    //       child: Text(
+                    //         'Login',
+                    //         style: TextStyle(
+                    //             color: Colors.white,
+                    //             fontSize: 20,
+                    //             fontWeight: FontWeight.bold),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    const SizedBox(height: 10),
+                    if (_errorMessage != null) ...[
+                      const SizedBox(height: 20),
+                      Text(
+                        'Login failed: $_errorMessage',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ),
-            Container(
-              width: 330,
-              height: 42,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 15,
-                ),
-                child: TextFormField(
-                  controller: usernameController,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Staff ID",
-                    prefixIcon: Icon(Icons.person),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 18),
-            Container(
-              width: 330,
-              height: 42,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 15,
-                ),
-                child: TextFormField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Password",
-                    prefixIcon: Icon(Icons.lock),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    "Forget Password?",
-                    style: TextStyle(color: Colors.blue, fontSize: 15),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const SizedBox(height: 40),
-            LoginButton(
-              onPressed: _isLoading ? null : _login,
-              buttonText: 'Login',
-              buttonColor: const Color(0xFF4FCA8A),
-              textColor: Colors.black,
-            ),
-            const SizedBox(height: 10),
-            if (_errorMessage != null) ...[
-              const SizedBox(height: 20),
-              Text(
-                'Login failed: $_errorMessage',
-                style: const TextStyle(color: Colors.red),
-              ),
-            ],
-          ],
+          ),
         ),
       ),
     );

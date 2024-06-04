@@ -6,10 +6,10 @@ class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-  changePassword() {}
-  logout() {}
+    changePassword() {}
+    logout() {}
 
     if (user == null) {
       return Scaffold(
@@ -50,7 +50,7 @@ class ProfilePage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                   Text(
+                  Text(
                     user.fname,
                     style: const TextStyle(
                       fontFamily: "Montserrat",
@@ -100,11 +100,11 @@ class ProfilePage extends ConsumerWidget {
                     const SizedBox(
                       height: 16,
                     ),
-                    listProfile(Icons.person, "Full Name", user.sname + user.fname),
+                    listProfile(
+                        Icons.person, "Full Name", user.sname + user.fname),
                     listProfile(
                         Icons.date_range, "Date of Birth", "July 21, 2000"),
-                    listProfile(Icons.location_pin, "Location",
-                        user.address),
+                    listProfile(Icons.location_pin, "Location", user.address),
                     listProfile(Icons.male, "Gender", user.gender),
                     listProfile(Icons.phone, "Phone Number", user.phone),
                     const SizedBox(
@@ -166,6 +166,9 @@ class ProfilePage extends ConsumerWidget {
                           ),
                         ),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 10,
                     ),
                   ],
                 ),

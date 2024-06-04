@@ -27,7 +27,8 @@ class AttendancePage extends ConsumerWidget {
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.white),
+          automaticallyImplyLeading: false, // This removes the back arrow
+          // iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: Container(
             width: double.infinity,

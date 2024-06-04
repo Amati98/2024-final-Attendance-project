@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   final int id;
+
   const HomePage({Key? key, required this.id}) : super(key: key);
 
   @override
@@ -87,7 +88,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       'timeOut': formattedCheckOutTime,
     };
     try {
-     final Attendance newAttendance = await ref.read(attendancePostProvider(postData).future);
+      final Attendance newAttendance = await ref.read(attendancePostProvider(postData).future);
       ref.read(attendanceNotifierProvider.notifier).addAttendance(newAttendance);
       // Handle successful login (e.g., navigate to another page or update UI)
       ScaffoldMessenger.of(context).showSnackBar(
@@ -114,217 +115,272 @@ class _HomePageState extends ConsumerState<HomePage> {
         }
         return true; // Allow default back button action
       },
-      child: Scaffold(
-        body: Column(
-          children: [
-            Row(
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.green.shade900,
+            title: const Text(
+              'Dashboard',
+              style: TextStyle(color: Colors.white),
+            ),
+            centerTitle: true,
+            automaticallyImplyLeading: false, // This removes the back arrow
+            // iconTheme: const IconThemeData(color: Colors.white),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
               children: [
-                //1st row in column
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(10.0)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          formattedDate.split(', ')[0],
-                          style: bigTextStyle,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          formattedMonthYear,
-                          style: smallTextStyle,
-                        )
-                      ],
-                    ),
-                  ),
+                const SizedBox(
+                  height: 40,
                 ),
-
-                //2nd row in column
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          formattedTime.split(' ')[0], // Display h:mm
-                          style: bigTextStyle,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(formattedTime.split(' ')[1], // Display am or pm
-                            style: smallTextStyle),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Visibility(
-                  visible: onCheckingInOut,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary:
-                          Color.fromARGB(255, 33, 156, 55), // Background color
-                    ),
-                    onPressed: (isCheckedIn || areButtonsDisabled)
-                        ? null
-                        : handleCheckIn,
-                    child: Text('CheckIn'),
-                  ),
-                ),
-                Visibility(
-                  visible: onCheckingInOut,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Color(0xffBD9055), // Background color
-                    ),
-                    onPressed: (isCheckOutEnabled && !areButtonsDisabled)
-                        ? handleCheckOut
-                        : null,
-                    child: Text('CheckOut'),
-                  ),
-                ),
-              ],
-            ),
-            //second column check in/out
-            const SizedBox(
-              height: 80,
-            ),
-            buildCheckedWidget(
-                "Checked In", const Color(0xff54B84B), checkInController),
-            buildCheckedWidget(
-                "Checked Out", const Color(0xffBD9055), checkOutController),
-            Visibility(
-              visible: !onCheckingInOut,
-              child: Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: Color(0xffBD9055) // Background color
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //1st row in column
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            formattedDate.split(', ')[0],
+                            style: bigTextStyle,
                           ),
-                      onPressed: () {
-                        setState(() {
-                          onCheckingInOut = true;
-                        });
-                      },
-                      child: Text('Check In/Out'),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            formattedMonthYear,
+                            style: smallTextStyle,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
+
+                    //2nd row in column
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff1D1212),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            formattedTime.split(' ')[0], // Display h:mm
+                            style: bigTextStyle,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text(formattedTime.split(' ')[1], // Display am or pm
+                              style: smallTextStyle),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 20,
-            ),
-
-            //third Column attendance
-            Visibility(
-              visible: !onCheckingInOut,
-              child: Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(12.0),
-                  padding: const EdgeInsets.fromLTRB(15, 28, 15, 28),
-                  decoration: BoxDecoration(
-                    color: const Color(0xffFFD9A7),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Attendance',
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Visibility(
+                      visible: onCheckingInOut,
+                      child: InkWell(
+                        onTap: (isCheckedIn || areButtonsDisabled)
+                            ? null
+                            : handleCheckIn,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 8),
+                          decoration: BoxDecoration(
+                              color: const Color(0xff54B84B),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Text(
+                            'Check In',
                             style: TextStyle(
-                              color: Color(0xffBD9055),
-                              fontSize: 20,
-                            ),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(
-                          height: 25,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    Visibility(
+                      visible: onCheckingInOut,
+                      child: InkWell(
+                        onTap: (isCheckOutEnabled && !areButtonsDisabled)
+                            ? handleCheckOut
+                            : null,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 8),
+                          decoration: BoxDecoration(
+                              color: const Color(0xffFFD9A7),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Text(
+                            'Check Out',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            //column1
-                            Column(
-                              children: [
-                                Text(
-                                  '7',
-                                  style: TextStyle(
-                                      fontSize: 15, color: Color(0xff54B84B)),
-                                ),
-                                Text('Presents',
-                                    style: TextStyle(
-                                        fontSize: 18, color: Color(0xffBD9055)))
-                              ],
-                            ),
-
-                            //column2
-                            Column(
-                              children: [
-                                Text(
-                                  '7',
-                                  style: TextStyle(
-                                      fontSize: 15, color: Color(0xffC2B260)),
-                                ),
-                                Text('Late',
-                                    style: TextStyle(
-                                        fontSize: 18, color: Color(0xffBD9055)))
-                              ],
-                            ),
-
-                            //column3
-                            Column(
-                              children: [
-                                Text(
-                                  '7',
-                                  style: TextStyle(
-                                      fontSize: 15, color: Color(0xffE03F3F)),
-                                ),
-                                Text('Absent',
-                                    style: TextStyle(
-                                        fontSize: 18, color: Color(0xffBD9055)))
-                              ],
-                            )
-                          ],
+                      ),
+                    ),
+                  ],
+                ),
+                //second column check in/out
+                const SizedBox(
+                  height: 40,
+                ),
+                buildCheckedWidget(
+                    "Checked In", const Color(0xff54B84B), checkInController),
+                buildCheckedWidget(
+                    "Checked Out", const Color(0xffFFD9A7), checkOutController),
+                Visibility(
+                  visible: !onCheckingInOut,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 40),
+                    margin: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xff1D1212),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            onCheckingInOut = true;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          decoration: BoxDecoration(
+                              color: const Color(0xffFFD9A7),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: const Text(
+                            'Check In/Out',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+
+                const SizedBox(
+                  height: 20,
+                ),
+
+                //third Column attendance
+                Visibility(
+                  visible: !onCheckingInOut,
+                  child: Container(
+                    margin: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.fromLTRB(15, 28, 15, 28),
+                    decoration: BoxDecoration(
+                      color: const Color(0xffFFD9A7),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Attendance',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.brown,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              //column1
+                              Column(
+                                children: [
+                                  Text(
+                                    '7',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff54B84B)),
+                                  ),
+                                  Text('Present',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.brown,
+                                      ))
+                                ],
+                              ),
+
+                              //column2
+                              Column(
+                                children: [
+                                  Text(
+                                    '7',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffC2B260)),
+                                  ),
+                                  Text('Late',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.brown,
+                                      ))
+                                ],
+                              ),
+
+                              //column3
+                              Column(
+                                children: [
+                                  Text(
+                                    '7',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffE03F3F)),
+                                  ),
+                                  Text('Absent',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.brown,
+                                      ))
+                                ],
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -336,18 +392,20 @@ class _HomePageState extends ConsumerState<HomePage> {
       visible: onCheckingInOut,
       child: Container(
         padding: const EdgeInsets.all(16.0),
-        margin: const EdgeInsets.only(left: 40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 140,
-                  height: 30,
                   child: Container(
-                    padding: const EdgeInsets.all(5.0),
-                    color: color,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: color,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: Text(
                       text,
                       style: const TextStyle(
@@ -359,27 +417,28 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                 ),
                 const SizedBox(width: 16.0),
-                SizedBox(
+                Container(
                   width: 120,
                   height: 40,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5.0),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff1D1212),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: TextField(
+                    textAlign: TextAlign.center,
+                    controller: controller,
+                    enabled: false,
+                    // Make the TextField non-editable
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
                     ),
-                    child: Center(
-                      child: TextField(
-                        controller: controller,
-                        enabled: false, // Make the TextField non-editable
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight:
+                            FontWeight.bold // Set the text color if needed
                         ),
-                        style: const TextStyle(
-                          color: Colors.black, // Set the text color if needed
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ],
