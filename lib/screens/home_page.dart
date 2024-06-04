@@ -1,4 +1,6 @@
 import 'package:final_year/constants.dart';
+import 'package:final_year/service/models/attendance_models.dart';
+import 'package:final_year/service/providers/attendance.dart';
 import 'package:final_year/service/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,7 +88,8 @@ class _HomePageState extends ConsumerState<HomePage> {
       'timeOut': formattedCheckOutTime,
     };
     try {
-      await ref.read(attendancePostProvider(postData).future);
+      final Attendance newAttendance = await ref.read(attendancePostProvider(postData).future);
+      ref.read(attendanceNotifierProvider.notifier).addAttendance(newAttendance);
       // Handle successful login (e.g., navigate to another page or update UI)
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Checked In and Out Successful')),
@@ -121,7 +124,8 @@ class _HomePageState extends ConsumerState<HomePage> {
               style: TextStyle(color: Colors.white),
             ),
             centerTitle: true,
-            iconTheme: const IconThemeData(color: Colors.white),
+            automaticallyImplyLeading: false, // This removes the back arrow
+            // iconTheme: const IconThemeData(color: Colors.white),
           ),
           body: SingleChildScrollView(
             child: Column(

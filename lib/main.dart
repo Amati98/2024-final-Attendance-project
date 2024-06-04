@@ -24,13 +24,14 @@ class Homepage extends ConsumerWidget {
   const Homepage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context,WidgetRef ref) {
     //  final responseProvider = ref.watch(  ApiService().loginProvider);
-
+    
     // dont forget to write "GetMaterialApp" for the home screen to run
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        // home: StaffLogin(),
-        routes: getAppRoutes());
+      debugShowCheckedModeBanner: false,
+      // home: StaffLogin(),
+      routes: getAppRoutes()
+    );
   }
 }

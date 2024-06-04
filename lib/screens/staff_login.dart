@@ -2,7 +2,6 @@ import 'package:final_year/service/providers/provider.dart';
 import 'package:final_year/widgets/loginButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // import 'package:your_app/models/user.dart';
 // import 'package:your_app/providers/login_provider.dart';
 

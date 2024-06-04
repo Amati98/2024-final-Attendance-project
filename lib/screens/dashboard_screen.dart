@@ -22,17 +22,51 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   //   const ProfilePage()
   // ];
   int currentIndex = 0;
-
   void onTap(int index) {
     setState(() {
       currentIndex = index;
     });
   }
 
+// CustomScrollView(
+//       slivers: [
+//         SliverAppBar(
+//           title: Padding(
+//             padding: const EdgeInsets.only(left: 24),
+//             child: Text(
+//               'Track Parcel',
+//               style: Theme.of(context).textTheme.headline1,
+//             ),
+//           ),
+//           centerTitle: false,
+//           floating: true,
+//           snap: false,
+//           pinned: true,
+//           titleSpacing: 0.0,
+//           actions: [
+//             Padding(
+//               padding: const EdgeInsets.only(right: 24),
+//               child: CircleAvatar(
+//                 child: ClipOval(
+//                   child: Image.network(ImageUtils.icProfile),
+//                 ),
+//               ),
+//             ),
+//           ],
+//           shadowColor: Colors.transparent,
+//           expandedHeight: 316,
+//           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+//           shape: const RoundedRectangleBorder(
+//             borderRadius: BorderRadius.only(
+//               bottomRight: Radius.circular(16),
+//               bottomLeft: Radius.circular(16),
+//             ),
+//           ),
   @override
   Widget build(BuildContext context) {
     // Get the user ID from the provider
     final user = ref.watch(userProvider);
+    // final attendance = ref.watch(attendanceProvider);
 
     // Check if the user is null
     if (user == null) {
@@ -48,14 +82,45 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       const ProfilePage(),
     ];
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: const Color(0xFFE0E0E0),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFE0E0E0),
+        automaticallyImplyLeading: false, // This removes the back arrow
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Menu'),
+            ),
+            ListTile(
+              title: const Text('Change Password '),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text('My Profile'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text('Logout'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
       body: pages[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        unselectedFontSize: 0,
+        selectedFontSize: 0,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: const Color(0xFFF5F5F5),
         onTap: onTap,
         selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey.shade600,
+        unselectedItemColor:
+            const Color.fromARGB(255, 104, 104, 104).withOpacity(0.5),
         showSelectedLabels: true,
         showUnselectedLabels: true,
         currentIndex: currentIndex,
