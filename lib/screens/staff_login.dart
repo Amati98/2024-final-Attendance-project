@@ -153,54 +153,55 @@ class _StaffLoginState extends ConsumerState<StaffLogin> {
                         ),
                       ),
                     ),
-                    // Row(
-                    //   children: [
-                    //     Checkbox(
-                    //         value: rememberMe,
-                    //         activeColor: Colors.green,
-                    //         onChanged: (newRemember) {
-                    //           setState(() {
-                    //             rememberMe = newRemember!;
-                    //           });
-                    //         }),
-                    //     Text('Remember me',
-                    //         style: TextStyle(
-                    //             color: Colors.grey.shade700, fontSize: 15)),
-                    //   ],
-                    // ),
-                    // const SizedBox(height: 40),
-                    // LoginButton(
-                    //   onPressed: _isLoading ? null : _login,
-                    //   buttonText: 'Login',
-                    //   buttonColor: const Color(0xFF4FCA8A),
-                    //   textColor: Colors.black,
-                    // ),
+                    Row(
+                      children: [
+                        Checkbox(
+                            value: rememberMe,
+                            activeColor: Colors.green,
+                            onChanged: (newRemember) {
+                              setState(() {
+                                rememberMe = newRemember!;
+                              });
+                            }),
+                        Text('Remember me',
+                            style: TextStyle(
+                                color: Colors.grey.shade700, fontSize: 15)),
+                      ],
+                    ),
+                    const SizedBox(height: 40),
+                    LoginButton(
+                      onPressed: _isLoading ? null : _login,
+                      buttonText: 'Login',
+                      buttonColor: const Color(0xFF4FCA8A),
+                      textColor: Colors.black,
+                    ),
                     const SizedBox(height: 50),
 
-                    InkWell(
-                      onTap: () {
-                        if (_formkey.currentState!.validate()) {
-                          _isLoading ? null : _login;
-                        }
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.green.shade900),
-                        child: const Center(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     print({_formkey.currentState!.validate(), 'Login'});
+                    //     if (_formkey.currentState!.validate()) {
+                    //       _isLoading ? null : _login;
+                    //     }
+                    //   },
+                    //   child: Container(
+                    //     margin: const EdgeInsets.symmetric(horizontal: 20),
+                    //     padding: const EdgeInsets.symmetric(vertical: 15),
+                    //     width: double.infinity,
+                    //     decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(10),
+                    //         color: Colors.green.shade900),
+                    //     child: const Center(
+                    //       child: Text(
+                    //         'Login',
+                    //         style: TextStyle(
+                    //             color: Colors.white,
+                    //             fontSize: 20,
+                    //             fontWeight: FontWeight.bold),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 10),
                     if (_errorMessage != null) ...[
                       const SizedBox(height: 20),
