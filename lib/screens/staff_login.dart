@@ -22,6 +22,7 @@ class _StaffLoginState extends ConsumerState<StaffLogin> {
   String? _errorMessage;
 
   void _login() async {
+    if(_formkey.currentState!.validate()){
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -42,7 +43,7 @@ class _StaffLoginState extends ConsumerState<StaffLogin> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login Successful')),
       );
-      Navigator.pushNamed(context, "/dashboard");
+      Navigator.pushNamed(context, "/forgetPasword");
     } catch (error) {
       // Handle error during login
       setState(() {
@@ -52,6 +53,7 @@ class _StaffLoginState extends ConsumerState<StaffLogin> {
       setState(() {
         _isLoading = false;
       });
+    }
     }
   }
 

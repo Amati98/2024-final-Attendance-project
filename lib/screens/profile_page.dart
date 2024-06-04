@@ -102,8 +102,6 @@ class ProfilePage extends ConsumerWidget {
                     ),
                     listProfile(
                         Icons.person, "Full Name", user.sname + user.fname),
-                    listProfile(
-                        Icons.date_range, "Date of Birth", "July 21, 2000"),
                     listProfile(Icons.location_pin, "Location", user.address),
                     listProfile(Icons.male, "Gender", user.gender),
                     listProfile(Icons.phone, "Phone Number", user.phone),
