@@ -51,6 +51,55 @@ class ApiService {
     }
   }
 
+  //handle change password
+  Future<void> ChangePassword(
+      int id,
+      String fname,
+      String sname,
+      String email,
+      String phone,
+      String gender,
+      String address,
+      String username,
+      String password) async {
+    try {
+      // Prepare the login request payload
+      final httpClient = createHttpClient();
+      final ioClient = IOClient(httpClient);
+
+      final response = await ioClient.put(
+        Uri.parse("${AppUrls.baseUrl}/api/Staffs/${id}"),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'id': id,
+          "fname": fname,
+          'sname': sname,
+          'email': email,
+          "phone": phone,
+          'gender': gender,
+          'address': address,
+          'username': username,
+          'password': password,
+        }),
+      );
+
+      // Check if the response is successful
+      if (response.statusCode == 204) {
+        // Parse the response body and return the User object
+        // return User.fromJson(jsonDecode(response.body));
+        return ;
+      } else {
+        // Handle non-200 responses
+        throw Exception('Failed to login: ${response.body}');
+      }
+    } catch (e) {
+      // Handle any errors that occur during the request
+      throw Exception('Error during login: $e');
+    }
+  }
+
   Future<List<Attendance>> fetchAttendanceHistories() async {
     final response = await http.get(
       Uri.parse('${AppUrls.baseUrl}/api/AttendanceHistories'),
@@ -63,7 +112,7 @@ class ApiService {
       // Convert the list of JSON objects to a list of Attendance objects
       return jsonResponse.map((json) => Attendance.fromJson(json)).toList();
       // Filter the list based on staff ID
-    // return allAttendances.where((attendance) => attendance.staffId == id).toList();
+      // return allAttendances.where((attendance) => attendance.staffId == id).toList();
     } else {
       throw Exception('Failed to load attendance histories');
     }
@@ -132,6 +181,29 @@ final loginProvider =
   ref.read(userProvider.notifier).setUser(user);
 
   return user;
+});
+
+//Define a futureProvider for change password
+// Define a FutureProvider for change password
+final changePasswordProvider =
+    FutureProvider.family<void, Map<String, dynamic>>((ref, data) async {
+  final apiService = ref.watch(apiServiceProvider);
+  await apiService.ChangePassword(
+    data['id'],
+    data['fname'],
+    data['sname'],
+    data['email'],
+    data['phone'],
+    data['gender'],
+    data['address'],
+    data['username'],
+    data['password'],
+  );
+
+  // Access the provider reference and call setUser
+  // ref.read(userProvider.notifier).setUser(user);
+
+  // return user;
 });
 
 // //define provider for attendance

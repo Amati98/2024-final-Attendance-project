@@ -130,6 +130,14 @@ class _HomePageState extends ConsumerState<HomePage> {
           body: SingleChildScrollView(
             child: Column(
               children: [
+                Center(
+                  child: Image.asset(
+                    "assets/logo.png",
+                    height: 158,
+                    width: 154,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 const SizedBox(
                   height: 40,
                 ),
@@ -283,98 +291,99 @@ class _HomePageState extends ConsumerState<HomePage> {
                   height: 20,
                 ),
 
+    //Remove unused card
                 //third Column attendance
-                Visibility(
-                  visible: !onCheckingInOut,
-                  child: Container(
-                    margin: const EdgeInsets.all(12.0),
-                    padding: const EdgeInsets.fromLTRB(15, 28, 15, 28),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffFFD9A7),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Attendance',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.brown,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              //column1
-                              Column(
-                                children: [
-                                  Text(
-                                    '7',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xff54B84B)),
-                                  ),
-                                  Text('Present',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors.brown,
-                                      ))
-                                ],
-                              ),
+                // Visibility(
+                //   visible: !onCheckingInOut,
+                //   child: Container(
+                //     margin: const EdgeInsets.all(12.0),
+                //     padding: const EdgeInsets.fromLTRB(15, 28, 15, 28),
+                //     decoration: BoxDecoration(
+                //       color: const Color(0xffFFD9A7),
+                //       borderRadius: BorderRadius.circular(10),
+                //     ),
+                //     child: const SingleChildScrollView(
+                //       child: Column(
+                //         children: [
+                //           Align(
+                //             alignment: Alignment.topLeft,
+                //             child: Text(
+                //               'Attendance',
+                //               style: TextStyle(
+                //                   fontSize: 20,
+                //                   color: Colors.brown,
+                //                   fontWeight: FontWeight.bold),
+                //             ),
+                //           ),
+                //           SizedBox(
+                //             height: 20,
+                //           ),
+                //           Row(
+                //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //             children: [
+                //               //column1
+                //               Column(
+                //                 children: [
+                //                   Text(
+                //                     '7',
+                //                     style: TextStyle(
+                //                         fontSize: 20,
+                //                         fontWeight: FontWeight.bold,
+                //                         color: Color(0xff54B84B)),
+                //                   ),
+                //                   Text('Present',
+                //                       style: TextStyle(
+                //                         fontWeight: FontWeight.bold,
+                //                         fontSize: 18,
+                //                         color: Colors.brown,
+                //                       ))
+                //                 ],
+                //               ),
 
-                              //column2
-                              Column(
-                                children: [
-                                  Text(
-                                    '7',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xffC2B260)),
-                                  ),
-                                  Text('Late',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors.brown,
-                                      ))
-                                ],
-                              ),
+                //               //column2
+                //               Column(
+                //                 children: [
+                //                   Text(
+                //                     '7',
+                //                     style: TextStyle(
+                //                         fontSize: 20,
+                //                         fontWeight: FontWeight.bold,
+                //                         color: Color(0xffC2B260)),
+                //                   ),
+                //                   Text('Late',
+                //                       style: TextStyle(
+                //                         fontWeight: FontWeight.bold,
+                //                         fontSize: 18,
+                //                         color: Colors.brown,
+                //                       ))
+                //                 ],
+                //               ),
 
-                              //column3
-                              Column(
-                                children: [
-                                  Text(
-                                    '7',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xffE03F3F)),
-                                  ),
-                                  Text('Absent',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors.brown,
-                                      ))
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                //               //column3
+                //               Column(
+                //                 children: [
+                //                   Text(
+                //                     '7',
+                //                     style: TextStyle(
+                //                         fontSize: 20,
+                //                         fontWeight: FontWeight.bold,
+                //                         color: Color(0xffE03F3F)),
+                //                   ),
+                //                   Text('Absent',
+                //                       style: TextStyle(
+                //                         fontWeight: FontWeight.bold,
+                //                         fontSize: 18,
+                //                         color: Colors.brown,
+                //                       ))
+                //                 ],
+                //               )
+                //             ],
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(
                   height: 20,
                 ),

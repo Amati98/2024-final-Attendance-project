@@ -87,30 +87,30 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         backgroundColor: const Color(0xFFE0E0E0),
         automaticallyImplyLeading: false, // This removes the back arrow
       ),
-      endDrawer: Drawer(
-        child: ListView(
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text('Menu'),
-            ),
-            ListTile(
-              title: const Text('Change Password '),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text('My Profile'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text('Logout'),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
+      // endDrawer: Drawer(
+      //   child: ListView(
+      //     children: [
+      //       const DrawerHeader(
+      //         decoration: BoxDecoration(
+      //           color: Colors.blue,
+      //         ),
+      //         child: Text('Menu'),
+      //       ),
+      //       ListTile(
+      //         title: const Text('Change Password '),
+      //         onTap: () {},
+      //       ),
+      //       ListTile(
+      //         title: const Text('My Profile'),
+      //         onTap: () {},
+      //       ),
+      //       ListTile(
+      //         title: const Text('Logout'),
+      //         onTap: () {},
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: pages[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         unselectedFontSize: 0,
