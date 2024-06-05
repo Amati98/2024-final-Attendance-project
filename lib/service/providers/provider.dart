@@ -39,8 +39,10 @@ class ApiService {
 
       // Check if the response is successful
       if (response.statusCode == 200) {
-        // Parse the response body and return the User object
-        return User.fromJson(jsonDecode(response.body));
+       final Map<String, dynamic> data = jsonDecode(response.body);
+        final user = User.fromJson(data['staffDetail']);
+        return user;
+
       } else {
         // Handle non-200 responses
         throw Exception('Failed to login: ${response.body}');
