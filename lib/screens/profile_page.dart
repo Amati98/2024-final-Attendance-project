@@ -146,7 +146,8 @@ class ProfilePage extends ConsumerWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        logout();
+                        // logout();
+                        Navigator.pushNamed(context, "/");
                       },
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 20),

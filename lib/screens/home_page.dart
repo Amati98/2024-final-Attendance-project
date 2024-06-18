@@ -5,6 +5,7 @@ import 'package:final_year/service/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   final int id;
@@ -22,61 +23,86 @@ class _HomePageState extends ConsumerState<HomePage> {
   bool isCheckOutEnabled = false;
   bool areButtonsDisabled = false;
 
-  // Format time in 12-hour format
   late String formattedTime;
   late String formattedDate;
   late String formattedMonthYear;
 
-  // TextEditingController for TextField
   late TextEditingController checkInController;
   late TextEditingController checkOutController;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the controller with a default value
     checkInController = TextEditingController(text: '');
     checkOutController = TextEditingController(text: '');
+    initializeState();
   }
 
   @override
   void dispose() {
-    // Dispose the controller when it's no longer needed
     checkInController.dispose();
     checkOutController.dispose();
     super.dispose();
   }
 
-  void handleCheckIn() {
+  void initializeState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? checkInTime = prefs.getString('checkInTime');
+    String? checkOutTime = prefs.getString('checkOutTime');
+    String today = DateFormat('yyyy-MM-dd').format(now);
+
+    if (checkInTime != null && checkInTime.startsWith(today)) {
+      setState(() {
+        isCheckedIn = true;
+        isCheckOutEnabled = true;
+        checkInController.text =
+            DateFormat('h:mm a').format(DateTime.parse(checkInTime));
+        areButtonsDisabled = true; // Disable buttons if already checked in
+      });
+    }
+
+    if (checkOutTime != null && checkOutTime.startsWith(today)) {
+      setState(() {
+        isCheckedIn = false;
+        isCheckOutEnabled = false;
+        areButtonsDisabled = true;
+        checkOutController.text =
+            DateFormat('h:mm a').format(DateTime.parse(checkOutTime));
+      });
+    }
+  }
+
+  void handleCheckIn() async {
     setState(() {
       isCheckedIn = true;
       isCheckOutEnabled = true;
       now = DateTime.now();
       checkInController.text = DateFormat('h:mm a').format(now);
     });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('checkInTime', now.toIso8601String());
   }
 
-  void handleCheckOut() {
+  void handleCheckOut() async {
     setState(() {
       isCheckedIn = false;
       isCheckOutEnabled = false;
       now = DateTime.now();
       checkOutController.text = DateFormat('h:mm a').format(now);
-      areButtonsDisabled = true; // Disable both buttons after checkout
+      areButtonsDisabled = true; // Disable buttons after check-out
     });
-    // Post attendance after check out
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('checkOutTime', now.toIso8601String());
     postAttendance();
   }
 
   Future<void> postAttendance() async {
     final formattedDateTime = DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(now);
-    // Convert text back to DateTime
     final DateTime checkInTime =
         DateFormat('h:mm a').parse(checkInController.text);
     final DateTime checkOutTime =
         DateFormat('h:mm a').parse(checkOutController.text);
 
-    // Format check-in and check-out times correctly
     final formattedCheckInTime =
         DateFormat('yyyy-MM-ddTHH:mm:ss.SSS').format(checkInTime);
     final formattedCheckOutTime =
@@ -87,10 +113,13 @@ class _HomePageState extends ConsumerState<HomePage> {
       'timeIn': formattedCheckInTime,
       'timeOut': formattedCheckOutTime,
     };
+
     try {
-      final Attendance newAttendance = await ref.read(attendancePostProvider(postData).future);
-      ref.read(attendanceNotifierProvider.notifier).addAttendance(newAttendance);
-      // Handle successful login (e.g., navigate to another page or update UI)
+      final Attendance newAttendance =
+          await ref.read(attendancePostProvider(postData).future);
+      ref
+          .read(attendanceNotifierProvider.notifier)
+          .addAttendance(newAttendance);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Checked In and Out Successful')),
       );
@@ -111,9 +140,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           setState(() {
             onCheckingInOut = false;
           });
-          return false; // Prevent default back button action
+          return false;
         }
-        return true; // Allow default back button action
+        return true;
       },
       child: SafeArea(
         child: Scaffold(
@@ -124,8 +153,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               style: TextStyle(color: Colors.white),
             ),
             centerTitle: true,
-            automaticallyImplyLeading: false, // This removes the back arrow
-            // iconTheme: const IconThemeData(color: Colors.white),
+            automaticallyImplyLeading: false,
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -144,7 +172,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //1st row in column
                     Container(
                       padding: const EdgeInsets.all(20),
                       margin: const EdgeInsets.all(15),
@@ -168,8 +195,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ],
                       ),
                     ),
-
-                    //2nd row in column
                     Container(
                       padding: const EdgeInsets.all(20),
                       margin: const EdgeInsets.all(15),
@@ -181,13 +206,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            formattedTime.split(' ')[0], // Display h:mm
+                            formattedTime.split(' ')[0],
                             style: bigTextStyle,
                           ),
                           const SizedBox(
                             height: 15,
                           ),
-                          Text(formattedTime.split(' ')[1], // Display am or pm
+                          Text(formattedTime.split(' ')[1],
                               style: smallTextStyle),
                         ],
                       ),
@@ -210,7 +235,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 8),
                           decoration: BoxDecoration(
-                              color: const Color(0xff54B84B),
+                              color: areButtonsDisabled
+                                  ? Colors.grey
+                                  : const Color(0xff54B84B),
                               borderRadius: BorderRadius.circular(10)),
                           child: const Text(
                             'Check In',
@@ -234,7 +261,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 8),
                           decoration: BoxDecoration(
-                              color: const Color(0xffFFD9A7),
+                              color: areButtonsDisabled
+                                  ? Colors.grey
+                                  : const Color(0xffFFD9A7),
                               borderRadius: BorderRadius.circular(10)),
                           child: const Text(
                             'Check Out',
@@ -247,7 +276,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ],
                 ),
-                //second column check in/out
                 const SizedBox(
                   height: 40,
                 ),
@@ -286,104 +314,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ),
                 ),
-
-                const SizedBox(
-                  height: 20,
-                ),
-
-    //Remove unused card
-                //third Column attendance
-                // Visibility(
-                //   visible: !onCheckingInOut,
-                //   child: Container(
-                //     margin: const EdgeInsets.all(12.0),
-                //     padding: const EdgeInsets.fromLTRB(15, 28, 15, 28),
-                //     decoration: BoxDecoration(
-                //       color: const Color(0xffFFD9A7),
-                //       borderRadius: BorderRadius.circular(10),
-                //     ),
-                //     child: const SingleChildScrollView(
-                //       child: Column(
-                //         children: [
-                //           Align(
-                //             alignment: Alignment.topLeft,
-                //             child: Text(
-                //               'Attendance',
-                //               style: TextStyle(
-                //                   fontSize: 20,
-                //                   color: Colors.brown,
-                //                   fontWeight: FontWeight.bold),
-                //             ),
-                //           ),
-                //           SizedBox(
-                //             height: 20,
-                //           ),
-                //           Row(
-                //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //             children: [
-                //               //column1
-                //               Column(
-                //                 children: [
-                //                   Text(
-                //                     '7',
-                //                     style: TextStyle(
-                //                         fontSize: 20,
-                //                         fontWeight: FontWeight.bold,
-                //                         color: Color(0xff54B84B)),
-                //                   ),
-                //                   Text('Present',
-                //                       style: TextStyle(
-                //                         fontWeight: FontWeight.bold,
-                //                         fontSize: 18,
-                //                         color: Colors.brown,
-                //                       ))
-                //                 ],
-                //               ),
-
-                //               //column2
-                //               Column(
-                //                 children: [
-                //                   Text(
-                //                     '7',
-                //                     style: TextStyle(
-                //                         fontSize: 20,
-                //                         fontWeight: FontWeight.bold,
-                //                         color: Color(0xffC2B260)),
-                //                   ),
-                //                   Text('Late',
-                //                       style: TextStyle(
-                //                         fontWeight: FontWeight.bold,
-                //                         fontSize: 18,
-                //                         color: Colors.brown,
-                //                       ))
-                //                 ],
-                //               ),
-
-                //               //column3
-                //               Column(
-                //                 children: [
-                //                   Text(
-                //                     '7',
-                //                     style: TextStyle(
-                //                         fontSize: 20,
-                //                         fontWeight: FontWeight.bold,
-                //                         color: Color(0xffE03F3F)),
-                //                   ),
-                //                   Text('Absent',
-                //                       style: TextStyle(
-                //                         fontWeight: FontWeight.bold,
-                //                         fontSize: 18,
-                //                         color: Colors.brown,
-                //                       ))
-                //                 ],
-                //               )
-                //             ],
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -407,49 +337,14 @@ class _HomePageState extends ConsumerState<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: color,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: Text(
-                      text,
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                Text(
+                  text,
+                  style: TextStyle(color: color, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(width: 16.0),
-                Container(
-                  width: 120,
-                  height: 40,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: const Color(0xff1D1212),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    controller: controller,
-                    enabled: false,
-                    // Make the TextField non-editable
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                    ),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight:
-                            FontWeight.bold // Set the text color if needed
-                        ),
-                  ),
-                ),
+                const SizedBox(width: 10),
+                Text(controller.text,
+                    style:
+                        TextStyle(color: color, fontWeight: FontWeight.bold)),
               ],
             ),
           ],
