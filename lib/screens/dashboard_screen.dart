@@ -78,7 +78,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     List<Widget> pages = [
       HomePage(id: user.id),
       AttendancePage(id: user.id),
-      const MapPage(),
+       MapPage(),
       const ProfilePage(),
     ];
     return Scaffold(

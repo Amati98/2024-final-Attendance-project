@@ -1,10 +1,14 @@
+import 'dart:math';
+
 import 'package:final_year/constants.dart';
 import 'package:final_year/service/models/attendance_models.dart';
 import 'package:final_year/service/providers/attendance.dart';
 import 'package:final_year/service/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   final int id;
@@ -16,6 +20,36 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  final Location _location = Location();
+  final LatLng schoolLocation = LatLng(
+      5.5601040, -0.2969782); // Replace with your school's latitude and longitude
+  final double radius = 100; // Radius in meters
+
+  bool _isWithinRadius = false;
+
+
+  void _checkLocation() async {
+    var locationData = await _location.getLocation();
+    double distance = _calculateDistance(
+      locationData.latitude!,
+      locationData.longitude!,
+      schoolLocation.latitude,
+      schoolLocation.longitude,
+    );
+    setState(() {
+      _isWithinRadius = distance < radius;
+    });
+  }
+
+  double _calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a)) * 1000; // distance in meters
+  }
+
   bool onCheckingInOut = false;
   DateTime now = DateTime.now();
   bool isCheckedIn = false;
@@ -35,6 +69,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
     // Initialize the controller with a default value
+     _checkLocation();
     checkInController = TextEditingController(text: '');
     checkOutController = TextEditingController(text: '');
   }
@@ -203,7 +238,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     Visibility(
                       visible: onCheckingInOut,
                       child: InkWell(
-                        onTap: (isCheckedIn || areButtonsDisabled)
+                        onTap: (isCheckedIn || areButtonsDisabled || !_isWithinRadius)
                             ? null
                             : handleCheckIn,
                         child: Container(
@@ -227,7 +262,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     Visibility(
                       visible: onCheckingInOut,
                       child: InkWell(
-                        onTap: (isCheckOutEnabled && !areButtonsDisabled)
+                        onTap: (isCheckOutEnabled && !areButtonsDisabled && _isWithinRadius)
                             ? handleCheckOut
                             : null,
                         child: Container(
